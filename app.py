@@ -32,6 +32,16 @@ for image_class in os.listdir(data_dir):
             # Try to open images with PIL to check if corrupt
             with Image.open(image_path) as img: 
                 img.verify()
+            
+            # Confirm valid extension
+            ext = image_path.split('.')[-1].lower()
+            if ext not in image_exts: 
+                print(f"Image not a jpg, jpeg or png {image_path}")
+                os.remove(image_path)
+
+        except Exception as e:
+            print(f"Corrupted image file {image_path}")
+            os.remove(image_path)
 
             
 
