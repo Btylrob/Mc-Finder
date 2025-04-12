@@ -29,4 +29,10 @@ for image_class in os.listdir(data_dir):
                 os.remove(image_path)
                 continue
 
+            # Try to open images with PIL to check if corrupt
+            with Image.open(image_path) as img: 
+                img.verify()
+
+            
+
     
