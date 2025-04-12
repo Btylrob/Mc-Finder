@@ -1,7 +1,7 @@
 # 🍔 McDonald's Image Classifier
 
 A deep learning application that classifies McDonald's menu items from images using TensorFlow and Keras. Each class is an item from the current McDonald's Menu as of April 2025.  
-
+STILL IN PRODUCTION NOT READY FOR USE **
 ---
 
 ## 🧠 Project Overview
