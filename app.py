@@ -45,13 +45,13 @@ for image_class in os.listdir(data_dir):
             os.remove(image_path)
 
     
-    # Load images from data directory
-    data = tf.keras.util.image_dataset_from_directory(
-        'data',
-        image_size=(224, 224), # 224 pixels to imporove efficiency
-        batch_size=32,
-        shuffle=True
-    )
+# Load images from data directory 
+data = tf.keras.util.image_dataset_from_directory(
+    'data',
+    image_size=(224, 224), # 224 pixels to imporove efficiency
+    batch_size=32,
+    shuffle=True
+)
 
     
 
