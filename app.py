@@ -48,7 +48,20 @@ for image_class in os.listdir(data_dir):
 # Load images from data directory 
 data = tf.keras.utils.image_dataset_from_directory(
     'data',
+    validation_split = .2,
+    subset = 'training',
+    seed = 123,
     image_size=(224, 224), # 224 pixels to imporove efficiency
+    batch_size=32,
+    shuffle=True
+)
+
+val_data = tf.keras.utils.image_dataset_from_directory(
+    'data',
+    validation_split=0.2,     # Same split
+    subset='validation',      # This is the validation portion
+    seed=123,
+    image_size=(224, 224),
     batch_size=32,
     shuffle=True
 )
@@ -58,6 +71,8 @@ class_names = data.class_names
 
 # Normalize images
 data = data.map(lambda x, y: (x / 255.0, y))
+val_data = val_data.map(lambda x, y: (x / 255.0, y))
+
 
 # randomizes display of data flipping it and giving it versatility
 data_augmentation = tf.keras.Sequential([
@@ -88,7 +103,7 @@ model.compile(
 )
 
 #train model
-history = model.fit(data, epochs = 10) # 10 complete cycles through data
+history = model.fit(data, validation_data = val_data ,epochs = 10) # 10 complete cycles through data
 
 # Previe a batch of images
 data_iterator = data.as_numpy_iterator()
