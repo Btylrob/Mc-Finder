@@ -71,6 +71,38 @@ model = tf.keras.Sequential([
     tf.keras.layers.Dense(len(class_names), activation='softmax') # turns vectors into a probability distroution 
 ])
 
+#compile model
+model.compile(
+    optimizer = 'adam',
+    loss = 'sparse_categorical_crossentropy',
+    metrics = ['accuracy']
+)
+
+#train model
+history = model.fit(data, epochs = 10) # 10 complete cycles through data
+
+# Previe a batch of images
+data_iterator = data.as_numpy_iterator()
+batch = next(data_iterator)
+
+# plot images from batch
+plt.figure(figsize=(12, 8))
+for i in range(6):
+    plt.subplot(2, 3, i+1)
+    plt.imshow(batch[0][i])  # Show image
+    plt.title(class_names[batch[1][i]])  # Show title as class name
+    plt.axis("off")
+plt.tight_layout()
+plt.show()
+
+img_path = ' '
+img = tf.keras.preprocessing.image.load_img(img_path, target_size=(224, 224))
+img_array = tf.keras.preprocessing.image.img_to_array(img) / 255.0
+img_array = tf.expand_dims(img_array, axis=0)  # Add batch dimension
+prediction = model.predict(img_array)
+predicted_class = class_names[np.argmax(prediction)]
+print(f"Predicted class: {predicted_class}")
+
 
 
     
