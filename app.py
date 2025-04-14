@@ -59,9 +59,18 @@ class_names = data.class_names
 # Normalize images
 data = data.map(lambda x, y: (x / 255.0, y))
 
+# randomizes display of data flipping it and giving it versatility
+data_augmentation = tf.keras.Sequential([
+    tf.keras.layers.RandomFlip("horizontal"),
+    tf.keras.layers.RandomRotation(0.1),
+    tf.keras.layers.RandomZoom(0.1),
+])
+
+
 # CNN Model
 model = tf.keras.Sequential([
     tf.keras.Input(shape=(224, 224, 3)), #Input layer formats to 224px and rgb
+    data_augmentation,
     tf.keras.layers.Conv2D(32, (3,3), activation='relu'), # applies 32 different filters 3x3 filters 
     tf.keras.layers.MaxPooling2D(), # picking the most prominent distinct features from our previous layer
     tf.keras.layers.Conv2D(64, (3,3), activation='relu'),
