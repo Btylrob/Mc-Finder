@@ -53,6 +53,26 @@ data = tf.keras.util.image_dataset_from_directory(
     shuffle=True
 )
 
+# get class names from data dir.
+class_names = data.class_names
+
+# Normalize images
+data = data.map(lambda x, y: (x / 255.0, y))
+
+# CNN Model
+model = tf.keras.Sequential([
+    tf.keras.Input(shape=(224, 224, 3)), #Input layer formats to 224px and rgb
+    tf.keras.layers.Conv2D(32, (3,3), activation='relu'), # applies 32 different filters 3x3 filters 
+    tf.keras.layers.MaxPooling2D(), # picking the most prominent distinct features from our previous layer
+    tf.keras.layers.Conv2D(64, (3,3), activation='relu'),
+    tf.keras.layers.MaxPooling2D(),
+    tf.keras.layers.Flatten(), # Flattens pooled map into a single vector for processing
+    tf.keras.layers.Dense(128, activation='relu'), # makes accurate decision based on previous findings
+    tf.keras.layers.Dense(len(class_names), activation='softmax') # turns vectors into a probability distroution 
+])
+
+
+
     
 
 
