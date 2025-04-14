@@ -1,4 +1,4 @@
-import tensorflow as tensorflow
+import tensorflow as tf 
 import os
 import cv2 
 from PIL import Image
@@ -95,7 +95,7 @@ for i in range(6):
 plt.tight_layout()
 plt.show()
 
-img_path = ' '
+img_path = 'testing-data/de3031da-d221-43a0-9c96-2ffbedbf6651_lg_sq.jpg'
 img = tf.keras.preprocessing.image.load_img(img_path, target_size=(224, 224))
 img_array = tf.keras.preprocessing.image.img_to_array(img) / 255.0
 img_array = tf.expand_dims(img_array, axis=0)  # Add batch dimension
