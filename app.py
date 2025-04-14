@@ -7,6 +7,7 @@ from matplotlib import pyplot as plt
 
 # GPU / CPU Mem config - I have a CPU however if you are running on GPU on comment out next line
 #CUDA_VISIBLE_DEVICES=0
+os.environ["CUDA_VISIBLE_DEVICES"] = ""
 CUDA_VISIBLE_DEVICES=""
 
 # Image cleanup / remove all images from data with incorrect file exten / corrupted files / and < 10kb
@@ -51,16 +52,16 @@ data = tf.keras.utils.image_dataset_from_directory(
     validation_split = .2,
     subset = 'training',
     seed = 123,
-    image_size=(224, 224), # 224 pixels to imporove efficiency
+    image_size=(224, 224), 
     batch_size=32,
     shuffle=True
 )
 
 val_data = tf.keras.utils.image_dataset_from_directory(
     'data',
-    validation_split=0.2,     # Same split
+    validation_split=0.2,     
     subset='validation',      # This is the validation portion
-    seed=123,
+    seed=123, # controlls randomess
     image_size=(224, 224),
     batch_size=32,
     shuffle=True
@@ -91,6 +92,7 @@ model = tf.keras.Sequential([
     tf.keras.layers.Conv2D(64, (3,3), activation='relu'),
     tf.keras.layers.MaxPooling2D(),
     tf.keras.layers.Flatten(), # Flattens pooled map into a single vector for processing
+    tf.keras.layers.Dropout(0.5),
     tf.keras.layers.Dense(128, activation='relu'), # makes accurate decision based on previous findings
     tf.keras.layers.Dense(len(class_names), activation='softmax') # turns vectors into a probability distroution 
 ])
@@ -119,7 +121,7 @@ for i in range(6):
 plt.tight_layout()
 plt.show()
 
-img_path = 'testing-data/de3031da-d221-43a0-9c96-2ffbedbf6651_lg_sq.jpg'
+img_path = 'testing-data/DC_202302_0005-999_BigMac_1564x1564-1_product-header-mobile.jpeg'
 img = tf.keras.preprocessing.image.load_img(img_path, target_size=(224, 224))
 img_array = tf.keras.preprocessing.image.img_to_array(img) / 255.0
 img_array = tf.expand_dims(img_array, axis=0)  # Add batch dimension
