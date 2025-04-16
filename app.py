@@ -2,7 +2,8 @@ import tensorflow as tf
 import os
 import cv2 
 from PIL import Image
-import numpy as np 
+import numpy as np
+import gradio as gr 
 from matplotlib import pyplot as plt 
 
 # GPU / CPU Mem config - I have a CPU however if you are running on GPU on comment out next line
@@ -121,13 +122,48 @@ for i in range(6):
 plt.tight_layout()
 plt.show()
 
-img_path = 'testing-data/DC_202302_0005-999_BigMac_1564x1564-1_product-header-mobile.jpeg'
-img = tf.keras.preprocessing.image.load_img(img_path, target_size=(224, 224))
-img_array = tf.keras.preprocessing.image.img_to_array(img) / 255.0
-img_array = tf.expand_dims(img_array, axis=0)  # Add batch dimension
-prediction = model.predict(img_array)
-predicted_class = class_names[np.argmax(prediction)]
-print(f"Predicted class: {predicted_class}")
+
+
+def classify_image(image):
+    img = image.resize((224, 224))  # Resize to match model input
+    img_array = np.array(img) / 255.0
+    img_array = np.expand_dims(img_array, axis=0)
+    prediction = model.predict(img_array)
+    predicted_class = class_names[np.argmax(prediction)]
+    return predicted_class
+
+with gr.Blocks() as demo:
+    gr.Markdown("yo slime")
+    with gr.Row():
+        inp = gr.Image(type="pil", label="Upload an image")
+        out = gr.Textbox(label="Predicted Class")
+        callback=gr.CSVLogger()
+    gr.Examples(
+        examples=[
+            ["testing-data/DC_202002_3832_OREOMcFlurry_1564x1564-1_product-header-mobile.jpeg"], 
+            ["testing-data/DC_202302_0005-999_BigMac_1564x1564-1_product-header-mobile.jpeg"],
+            ["testing-data/images (8).jpeg"],
+            ["testing-data/images.jpeg"]
+
+        ],
+        inputs=inp
+    )
+
+
+    btn = gr.Button("Run")
+    btn.click(fn=classify_image, inputs=inp, outputs=out)
+
+    gr.ClearButton(inp, out)
+
+    callback.setup([inp, out], "flagged_data_points")
+
+    btn = gr.Button("Flag")
+    btn.click(lambda *args: callback.flag(list(args)), [inp, out], None, preprocess=False)
+    
+
+demo.launch()
+
+
 
 
 
